@@ -52,3 +52,6 @@ Drift Detection
 Retraining
       ↓
 Redeployment
+
+## Git Branching Strategy
+Development follows main, dev, and feature/* branches.
