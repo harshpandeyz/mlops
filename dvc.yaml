@@ -1,0 +1,32 @@
+stages:
+  preprocess:
+    cmd: python3 src/preprocess.py
+    deps:
+      - data/dataset.csv
+      - src/preprocess.py
+    outs:
+      - data/processed.csv
+  train:
+    cmd: python3 src/train.py
+    deps:
+      - data/processed.csv
+      - src/train.py
+    params:
+      - train.test_size
+      - train.random_state
+      - model.n_estimators
+      - model.max_depth
+    outs:
+      - models/model.pkl
+  evaluate:
+    cmd: python3 src/evaluate.py
+    deps:
+      - models/model.pkl
+      - data/processed.csv
+      - src/evaluate.py
+    params:
+      - train.test_size
+      - train.random_state
+    metrics:
+      - metrics/metrics.json:
+          cache: false

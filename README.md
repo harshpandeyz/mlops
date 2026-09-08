@@ -1,57 +1,66 @@
-# MLOps Lifecycle – Sample Machine Learning Project
+# Iris ML Experiment Pipeline using Git + DVC
 
-## Assignment: Git Repository Setup and MLOps Lifecycle Documentation
+## 1. Project Objective
+Train a Random Forest classifier on the Iris dataset with a reproducible Git + DVC pipeline and compare two experiments.
 
-This repository demonstrates a basic **MLOps workflow** for a sample Machine Learning project. It covers Git-based version control, branching strategy, data and model management, experiment tracking, model training, validation, deployment, monitoring, and retraining.
+## 2. Technologies Used
+Python, pandas, scikit-learn, Git, GitHub, DVC, Random Forest.
 
----
-
-## 1. Objective
-
-The objectives of this assignment are:
-
-- Set up a Git repository for an ML project.
-- Implement a proper Git branching strategy.
-- Maintain separate `main`, `dev`, and `feature/*` branches.
-- Document the complete MLOps lifecycle.
-- Demonstrate reproducibility and version control.
-- Understand how ML development moves from experimentation to production.
-- Establish a foundation for CI/CD and automated ML workflows.
-
----
-
-# 2. MLOps Lifecycle
-
-The project follows the following lifecycle:
-
+## 3. Project Structure
 ```text
-Data Collection
-      ↓
-Data Validation
-      ↓
-Data Versioning
-      ↓
-Data Preprocessing
-      ↓
-Model Training
-      ↓
-Experiment Tracking
-      ↓
-Model Validation
-      ↓
-Model Versioning
-      ↓
-Model Packaging
-      ↓
-Deployment
-      ↓
-Monitoring
-      ↓
-Drift Detection
-      ↓
-Retraining
-      ↓
-Redeployment
+current-folder/
+├── data/
+│   ├── dataset.csv
+│   └── processed.csv
+├── src/
+│   ├── preprocess.py
+│   ├── train.py
+│   └── evaluate.py
+├── models/
+│   └── model.pkl
+├── metrics/
+│   └── metrics.json
+├── params.yaml
+├── dvc.yaml
+├── dvc.lock
+├── requirements.txt
+├── README.md
+└── .gitignore
+```
 
-## Git Branching Strategy
-Development follows main, dev, and feature/* branches.
+## 4. DVC Pipeline
+Three stages: `preprocess` (data/dataset.csv -> data/processed.csv), `train` (data/processed.csv -> models/model.pkl), `evaluate` (models/model.pkl -> metrics/metrics.json).
+```text
+Raw Dataset -> Preprocessing -> Processed Dataset -> Training -> Model -> Evaluation -> Metrics
+```
+
+## 5. Parameters
+`params.yaml` controls the split and model:
+```yaml
+train:
+  test_size: 0.2
+  random_state: 42
+model:
+  n_estimators: 100
+  max_depth: 5
+```
+
+## 6. Experiment 1
+Initial run with `n_estimators=100, max_depth=5`.
+Commit: `Experiment 1: Initial Iris ML pipeline`
+
+## 7. Experiment 2
+Updated run with `n_estimators=200, max_depth=10`.
+Commit: `Experiment 2: Updated Random Forest parameters`
+
+## 8. Reproduction Commands
+```bash
+pip install -r requirements.txt
+dvc pull  # if remote configured
+dvc repro
+dvc metrics show
+dvc metrics diff
+dvc dag
+git log --oneline
+```
+Track dataset: `dvc add data/dataset.csv`
